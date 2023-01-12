@@ -41,121 +41,154 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: Container(
         color: Color.fromARGB(57, 12, 12, 12),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 50),
           child:ListView(
             children: <Widget> [
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: Text(
-                  'Informações do Usuário',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, ),
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                child: Column(children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: Text(
+                      'Informações do Usuário',
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, ),
                     ),
-                    child: CircleAvatar(
-                      radius: 80,
-                      backgroundImage: _photo != null ? FileImage(File(_photo!.path)) : null,
-                      child: _photo == null ? Icon(Icons.photo_camera) : null
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                    child: Column(children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          side: BorderSide(width: 2, color: Color.fromARGB(255, 197, 148, 0))
+                        ),
+                        child: CircleAvatar(
+                          radius: 80,
+                          backgroundImage: _photo != null ? FileImage(File(_photo!.path)) : null,
+                          child: _photo == null ? Icon(Icons.photo_camera) : null
+                        ),
+                        onPressed: () => _showPickOptionsDialog(context),
+                      )
+                    ]),
+                  ),
+                  
+                  TextFormField(
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      labelText: 'Nome',
+                      labelStyle: LabelTextStyle
                     ),
-                    onPressed: () => _showPickOptionsDialog(context),
-                  )
-                ]),
-              ),
-              Divider(),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: 'Nome',
-                  labelStyle: LabelTextStyle
-                ),
-                style: TextStyle(fontSize: 20),
-              ),
-              Divider(),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: LabelTextStyle
-                ),
-                style: TextStyle(fontSize: 20),
-              ),
-              Divider(),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  TelefoneInputFormatter()
-                ],
-                decoration: InputDecoration(
-                  labelText: 'Celular',
-                  labelStyle: LabelTextStyle
-                ),
-                style: TextStyle(fontSize: 20),
-              ),
-              Divider(),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  CpfInputFormatter()
-                ],
-                decoration: InputDecoration(
-                  labelText: 'CPF',
-                  labelStyle: LabelTextStyle
-                ),
-                style: TextStyle(fontSize: 20),
-              ),
-              Divider(),
-              SizedBox(
-                height: 30,
-              ),
-              Center(
-                child: Text(
-                  'Endereço',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
-                ),
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  CepInputFormatter()
-                ],
-                decoration: InputDecoration(
-                  labelText: 'CEP',
-                  labelStyle: LabelTextStyle
-                ),
-                style: TextStyle(fontSize: 20),
-              ),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                inputFormatters: [
-                  FilteringTextInputFormatter.singleLineFormatter
-                ],
-                decoration: InputDecoration(
-                  labelText: 'Endereço',
-                  labelStyle: LabelTextStyle
-                ),
-                style: TextStyle(fontSize: 20),
-              ),
-              
-              
-            ],
-            ),
-          )
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TelefoneInputFormatter()
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'Celular',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CpfInputFormatter()
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'CPF',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Center(
+                    child: Text(
+                      'Endereço',
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
+                    ),
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CepInputFormatter()
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'CEP',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.singleLineFormatter
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'Endereço',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.singleLineFormatter
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'Rua',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Numero',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.singleLineFormatter
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'Complemento',
+                      labelStyle: LabelTextStyle
+                    ),
+                    style: TextStyle(fontSize: 20),
+                  ),
+
+              ],)
+            )
+          ],
         ),
+      )
     );
   }
   
