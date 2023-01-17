@@ -5,7 +5,6 @@ import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:io';
-
 import 'package:brasil_fields/brasil_fields.dart';
 
 
@@ -15,8 +14,28 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  // Profile Picture Variables
   XFile? _photo;
   TextStyle LabelTextStyle = TextStyle(color: Colors.black38, fontWeight: FontWeight.w400, fontSize: 20);
+
+  // Person data controllers
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _cpfController = TextEditingController();
+
+  // Person adress controllers
+  final _cepController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _streetController = TextEditingController();
+  final _numberController = TextEditingController();
+  final _addressComplementController = TextEditingController();
+
+  // User Type Variables
+  var _userType;
+  List<bool> _selections = List.generate(2, (index) => false);
 
   @override
   Widget build(BuildContext context) {
@@ -45,151 +64,254 @@ class _RegisterPageState extends State<RegisterPage> {
             children: <Widget> [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: Text(
-                      'Informações do Usuário',
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                    child: Column(children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
-                          side: BorderSide(width: 2, color: Color.fromARGB(255, 197, 148, 0))
-                        ),
-                        child: CircleAvatar(
-                          radius: 80,
-                          backgroundImage: _photo != null ? FileImage(File(_photo!.path)) : null,
-                          child: _photo == null ? Icon(Icons.photo_camera) : null
-                        ),
-                        onPressed: () => _showPickOptionsDialog(context),
-                      )
-                    ]),
-                  ),
-                  
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                      labelText: 'Nome',
-                      labelStyle: LabelTextStyle
+                    Center(
+                      child: Text(
+                        'Informações do Usuário',
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, ),
+                      ),
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: LabelTextStyle
+                    SizedBox(
+                      height: 20,
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      TelefoneInputFormatter()
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Celular',
-                      labelStyle: LabelTextStyle
+                    
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                      child: Column(children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            side: BorderSide(width: 2, color: Color.fromARGB(255, 197, 148, 0))
+                          ),
+                          child: CircleAvatar(
+                            radius: 80,
+                            backgroundImage: _photo != null ? FileImage(File(_photo!.path)) : null,
+                            child: _photo == null ? Icon(Icons.photo_camera) : null
+                          ),
+                          onPressed: () => _showPickOptionsDialog(context),
+                        )
+                      ]),
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      CpfInputFormatter()
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'CPF',
-                      labelStyle: LabelTextStyle
+                    
+                    TextFormField( // Name form field
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        labelText: 'Nome',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _nameController,
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Center(
-                    child: Text(
-                      'Endereço',
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
+                    
+                    TextFormField( // Email form field
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _emailController,
                     ),
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      CepInputFormatter()
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'CEP',
-                      labelStyle: LabelTextStyle
+                    
+                    TextFormField( // Phone form field
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        TelefoneInputFormatter()
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'Celular',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _phoneController,
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.singleLineFormatter
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Endereço',
-                      labelStyle: LabelTextStyle
+                    
+                    TextFormField( // CPF form field
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        CpfInputFormatter()
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'CPF',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _cpfController,
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.singleLineFormatter
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Rua',
-                      labelStyle: LabelTextStyle
+                    
+                    SizedBox(
+                      height: 30,
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Numero',
-                      labelStyle: LabelTextStyle
+                    Center(
+                      child: Text(
+                        'Endereço',
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
+                      ),
                     ),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.singleLineFormatter
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Complemento',
-                      labelStyle: LabelTextStyle
-                    ),
-                    style: TextStyle(fontSize: 20),
-                  ),
 
-              ],)
+                    TextFormField( // CEP form field
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        CepInputFormatter()
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'CEP',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _cepController,
+                    ),
+
+                    TextFormField( // Address form field
+                      keyboardType: TextInputType.text,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.singleLineFormatter
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'Endereço',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _addressController,
+                    ),
+                    
+                    TextFormField( // Street form field
+                      keyboardType: TextInputType.text,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.singleLineFormatter
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'Rua',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _streetController,
+                    ),
+                    
+                    TextFormField( // Number form field
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Numero',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _numberController,
+                    ),
+                    
+                    TextFormField( // Address complement form field
+                      keyboardType: TextInputType.text,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.singleLineFormatter
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'Complemento',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: TextStyle(fontSize: 20),
+                      controller: _addressComplementController,
+                    ),
+                    
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Center(
+                      child: Text(
+                        'Tipo',
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    
+                    ToggleButtons( // User type select button
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                Icon(Icons.person),
+                                Text('Aluno')
+                              ],
+                            ),
+                          )
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                Icon(Icons.fitness_center),
+                                Text('Personal')
+                              ],
+                            ),
+                          )
+                        )
+                      ], 
+                      isSelected: _selections,
+                      onPressed: ((int index) {
+                        setState(() {
+                          _selections = List.generate(2, (index) => false);
+                          _selections[index] = !_selections[index];
+                        });
+                      }),
+                    ),
+                    
+                    SizedBox(
+                      height: 20,
+                    ),
+                    
+                    ElevatedButton( // Submit button 
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('CONTINUAR')
+                      ),
+                      onPressed: () async {
+                        
+                        if (_formKey.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Processing Data'))
+                          );
+                          
+                        }
+                      }, 
+                    ),
+                    SizedBox(height: 30,)
+                ],)
+              )
             )
           ],
         ),
       )
     );
+  }
+
+  _nullformvalidation(value) {
+    if (value == null || value.isEmpty) {
+      return 'Esse campo não pode estar vazio!!!';
+    } 
+    return null;
   }
   
   void _showPickOptionsDialog(BuildContext context) {
@@ -233,6 +355,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     Navigator.pop(context);
   }
+
 }
 
 
