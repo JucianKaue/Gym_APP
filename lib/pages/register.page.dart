@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:gym_app/database.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:io';
@@ -34,7 +34,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _addressComplementController = TextEditingController();
 
   // User Type Variables
-  var _userType;
   List<bool> _selections = List.generate(2, (index) => false);
 
   @override
@@ -293,7 +292,51 @@ class _RegisterPageState extends State<RegisterPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processing Data'))
                           );
+                          // Connect to the database
+                          final conn = await MySqlConnection.connect(
+                            ConnectionSettings(
+                              host: '192.168.0.112',
+                              port: 3306,
+                              user: 'jucian',
+                              db: 'app_personal',
+                              password: 'Keua@54893',
+                              timeout: const Duration(seconds: 10)
+                            )
+                          );
+                          // Add addres to the dataase
+                          var addreses_count = await conn.query('SELECT MAX(id) FROM address;');
+                          await conn.query(
+                            'INSERT INTO address (id, cep, address, street, number, complement) VALUES (?, ?, ?, ?, ?, ?)',
+                            [
+                              addreses_count.elementAt(0)[0]+1,
+                              _cepController.text,
+                              _addressController.text, 
+                              _streetController.text,
+                              _numberController.text,
+                              _addressComplementController.text
+                            ]
+                          );
+                          // Add the user to the database.
+                          var users_count = await conn.query('SELECT MAX(id) FROM address;');
+                          await conn.query(
+                            'INSERT INTO app_personal.user (id, name, photo_url, cpf, typeuser, address_id, email_address, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                            [
+                              users_count.elementAt(0)[0]+1,
+                              _nameController.text,
+                              '',
+                              _cpfController.text,
+                              _selections.indexOf(true),
+                              addreses_count.elementAt(0)[0]+1,
+                              _emailController.text,
+                              _phoneController.text
+                            ]
+                          );
                           
+                          if (_selections.indexOf(true) == 0) {
+                            
+                          } else if (_selections.indexOf(true) == 1) {
+
+                          }
                         }
                       }, 
                     ),
