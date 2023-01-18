@@ -1,8 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
-import 'package:gym_app/database.dart';
 import 'package:flutter/material.dart';
+
+import 'package:gym_app/utils.dart';
+
+import 'package:gym_app/pages/client/register.page.dart';
+import 'package:gym_app/pages/personal/register.page.dart';
 
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
@@ -332,10 +336,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             ]
                           );
                           
+                          print(_selections.indexOf(true) == 1);
                           if (_selections.indexOf(true) == 0) {
                             
                           } else if (_selections.indexOf(true) == 1) {
-
+                            sleep(Duration(seconds: 1));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(users_count.elementAt(0)[0]+1)));
                           }
                         }
                       }, 
