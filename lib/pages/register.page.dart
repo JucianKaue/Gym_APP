@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:gym_app/mixins/validations_mixins.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
   final _formKey = GlobalKey<FormState>();
 
   // Profile Picture Variables
@@ -111,7 +112,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                      ])),
                       controller: _usernameController,
                     ),
 
@@ -123,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _passwordValidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _passwordController,
                     ),
                     TextFormField( // Password confirmation form field
@@ -134,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _passwordConfirmController,
                     ),
                     
@@ -150,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _nameController,
                     ),
                     
@@ -161,7 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _emailController,
                     ),
                     
@@ -176,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _phoneController,
                     ),
                     
@@ -191,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _cpfController,
                     ),
                     
@@ -216,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _cepController,
                     ),
 
@@ -230,7 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _addressController,
                     ),
                     
@@ -244,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _streetController,
                     ),
                     
@@ -255,7 +258,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => _nullformvalidation(value)),
+                      validator: ((value) => isNotEmpty(value)),
                       controller: _numberController,
                     ),
                     
@@ -400,21 +403,28 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  _nullformvalidation(value) {
-    if (value == null || value.isEmpty) {
-      return 'Esse campo não pode estar vazio!!!';
-    }
-    return null;
-  }
+  // _nullformvalidation(value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Esse campo não pode estar vazio!!!';
+  //   }
+  //   return null;
+  // }
 
-  _passwordValidation(value) {
-    if (value == null || value.isEmpty) {
-      return 'Esse campo não pode estar vazio!!!';
-    } else if (_passwordConfirmController.text != _passwordController.text) {
-      return 'As senhas não são iguais';
-    }
-    return null;
-  }
+  // _usernameFormValidation(value) async {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Esse campo não pode estar vazio!!!';
+  //   } 
+    
+  // }
+
+  // _passwordValidation(value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Esse campo não pode estar vazio!!!';
+  //   } else if (_passwordConfirmController.text != _passwordController.text) {
+  //     return 'As senhas não são iguais';
+  //   }
+  //   return null;
+  // }
   
   void _showPickOptionsDialog(BuildContext context) {
     showDialog(
