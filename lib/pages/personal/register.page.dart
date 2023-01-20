@@ -141,7 +141,7 @@ class _RegisterPersonalPageState extends State<RegisterPersonalPage> {
                             )
                           );
                           await conn.query(
-                            'INSERT INTO app_personal.personal (id_especialty, description, User_id) VALUES (?, ?, ?)',
+                            'INSERT INTO app_personal.personal (especialty_id, description, User_id) VALUES (?, ?, ?)',
                             [
                               _especialty.value,
                               _descriptionController.text,

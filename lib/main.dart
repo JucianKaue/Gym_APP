@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         )
       ),
       // home: Welcomepage(),
-      home: RegisterPersonalPage(11),
+      home: RegisterPage(),
     );
   }
 }

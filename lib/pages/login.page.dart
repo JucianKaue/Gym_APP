@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'register.page.dart';
 
+
 class LoginPage extends StatelessWidget {
+  final _emailController = TextEditingController();
+  final _passsword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +30,9 @@ class LoginPage extends StatelessWidget {
               height: 70,
             ),
             TextFormField(
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                labelText: 'E-mail',
+                labelText: 'Nome de Usuário',
                 labelStyle: TextStyle(
                   color: Colors.black38,
                   fontWeight: FontWeight.w400,

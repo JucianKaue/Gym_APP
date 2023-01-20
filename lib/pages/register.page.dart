@@ -22,7 +22,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Profile Picture Variables
   XFile? _photo;
-  TextStyle LabelTextStyle = TextStyle(color: Colors.black38, fontWeight: FontWeight.w400, fontSize: 20);
+  TextStyle LabelTextStyle = const TextStyle(color: Colors.black38, fontWeight: FontWeight.w400, fontSize: 20);
+
+  // Username and password
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordConfirmController = TextEditingController();
 
   // Person data controllers
   final _nameController = TextEditingController();
@@ -49,8 +54,8 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Registrar'),
-            SizedBox(
+            const Text('Registrar'),
+            const SizedBox(
               width: 5,
             ),
             SizedBox(
@@ -62,54 +67,89 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: Container(
-        color: Color.fromARGB(57, 12, 12, 12),
+        color: const Color.fromARGB(57, 12, 12, 12),
           child:ListView(
             children: <Widget> [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 50),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
+                    const SizedBox(height: 20),
+                    const Center(
                       child: Text(
                         'Informações do Usuário',
                         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                       child: Column(children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
-                            side: BorderSide(width: 2, color: Color.fromARGB(255, 197, 148, 0))
+                            shape: const CircleBorder(),
+                            side: const BorderSide(width: 2, color: Color.fromARGB(255, 197, 148, 0))
                           ),
                           child: CircleAvatar(
                             radius: 80,
                             backgroundImage: _photo != null ? FileImage(File(_photo!.path)) : null,
-                            child: _photo == null ? Icon(Icons.photo_camera) : null
+                            child: _photo == null ? const Icon(Icons.photo_camera) : null
                           ),
                           onPressed: () => _showPickOptionsDialog(context),
                         )
                       ]),
                     ),
+
+                    TextFormField( // Username form field
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        labelText: 'Nome de Usuário',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: const TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _usernameController,
+                    ),
+
+                    TextFormField( // Password form field
+                      keyboardType: TextInputType.name,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: const TextStyle(fontSize: 20),
+                      validator: ((value) => _passwordValidation(value)),
+                      controller: _passwordController,
+                    ),
+                    TextFormField( // Password confirmation form field
+                      keyboardType: TextInputType.name,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Confirme a Senha',
+                        labelStyle: LabelTextStyle
+                      ),
+                      style: const TextStyle(fontSize: 20),
+                      validator: ((value) => _nullformvalidation(value)),
+                      controller: _passwordConfirmController,
+                    ),
                     
+                    const SizedBox(height: 10),
+                    Divider(),
+                    const SizedBox(height: 10),
+
+
                     TextFormField( // Name form field
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         labelText: 'Nome',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _nameController,
                     ),
@@ -120,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Email',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _emailController,
                     ),
@@ -135,7 +175,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Celular',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _phoneController,
                     ),
@@ -150,15 +190,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'CPF',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _cpfController,
                     ),
                     
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
-                    Center(
+                    const Center(
                       child: Text(
                         'Endereço',
                         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
@@ -175,7 +215,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'CEP',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _cepController,
                     ),
@@ -189,7 +229,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Endereço',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _addressController,
                     ),
@@ -203,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Rua',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _streetController,
                     ),
@@ -214,7 +254,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Numero',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       validator: ((value) => _nullformvalidation(value)),
                       controller: _numberController,
                     ),
@@ -228,31 +268,38 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Complemento',
                         labelStyle: LabelTextStyle
                       ),
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       controller: _addressComplementController,
                     ),
                     
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
-                    Center(
+                    const Center(
                       child: Text(
                         'Tipo',
                         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     
                     ToggleButtons( // User type select button
+                      isSelected: _selections,
+                      onPressed: ((int index) {
+                        setState(() {
+                          _selections = List.generate(2, (index) => false);
+                          _selections[index] = !_selections[index];
+                        });
+                      }), // User type select button
                       children: [
                         SizedBox(
                           width: 100,
                           child: Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
-                              children: [
+                              children: const [
                                 Icon(Icons.person),
                                 Text('Aluno')
                               ],
@@ -262,31 +309,24 @@ class _RegisterPageState extends State<RegisterPage> {
                         SizedBox(
                           width: 100,
                           child: Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
-                              children: [
+                              children: const [
                                 Icon(Icons.fitness_center),
                                 Text('Personal')
                               ],
                             ),
                           )
                         )
-                      ], 
-                      isSelected: _selections,
-                      onPressed: ((int index) {
-                        setState(() {
-                          _selections = List.generate(2, (index) => false);
-                          _selections[index] = !_selections[index];
-                        });
-                      }),
+                      ],
                     ),
                     
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     
                     ElevatedButton( // Submit button 
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.all(8),
                         child: Text('CONTINUAR')
                       ),
@@ -308,11 +348,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             )
                           );
                           // Add addres to the dataase
-                          var addreses_count = await conn.query('SELECT MAX(id) FROM address;');
+                          var addreses_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
+                          if (addreses_count == null) {addreses_count = 0;} else {addreses_count = addreses_count+1;};
                           await conn.query(
                             'INSERT INTO address (id, cep, address, street, number, complement) VALUES (?, ?, ?, ?, ?, ?)',
                             [
-                              addreses_count.elementAt(0)[0]+1,
+                              addreses_count,
                               _cepController.text,
                               _addressController.text, 
                               _streetController.text,
@@ -321,16 +362,19 @@ class _RegisterPageState extends State<RegisterPage> {
                             ]
                           );
                           // Add the user to the database.
-                          var users_count = await conn.query('SELECT MAX(id) FROM address;');
+                          int? users_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
+                          if (users_count == null) {users_count = 0;} else {users_count = users_count+1;};
                           await conn.query(
-                            'INSERT INTO app_personal.user (id, name, photo_url, cpf, typeuser, address_id, email_address, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                            'INSERT INTO app_personal.user (id, username, password, name, photo_url, cpf, typeuser, address_id, email_address, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                             [
-                              users_count.elementAt(0)[0]+1,
+                              users_count,
+                              _usernameController.text,
+                              _passwordController.text,
                               _nameController.text,
-                              '',
+                              users_count,
                               _cpfController.text,
                               _selections.indexOf(true),
-                              addreses_count.elementAt(0)[0]+1,
+                              addreses_count,
                               _emailController.text,
                               _phoneController.text
                             ]
@@ -340,13 +384,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           if (_selections.indexOf(true) == 0) {
                             
                           } else if (_selections.indexOf(true) == 1) {
-                            sleep(Duration(seconds: 1));
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(users_count.elementAt(0)[0]+1)));
+                            sleep(const Duration(seconds: 1));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(users_count)));
                           }
                         }
                       }, 
                     ),
-                    SizedBox(height: 30,)
+                    const SizedBox(height: 30,)
                 ],)
               )
             )
@@ -359,7 +403,16 @@ class _RegisterPageState extends State<RegisterPage> {
   _nullformvalidation(value) {
     if (value == null || value.isEmpty) {
       return 'Esse campo não pode estar vazio!!!';
-    } 
+    }
+    return null;
+  }
+
+  _passwordValidation(value) {
+    if (value == null || value.isEmpty) {
+      return 'Esse campo não pode estar vazio!!!';
+    } else if (_passwordConfirmController.text != _passwordController.text) {
+      return 'As senhas não são iguais';
+    }
     return null;
   }
   
@@ -371,7 +424,7 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              title: Row(children: [
+              title: Row(children: const [
                 Icon(Icons.photo_library),
                 SizedBox(width: 10,),
                 Text('Escolha da Galeria'),
@@ -379,7 +432,7 @@ class _RegisterPageState extends State<RegisterPage> {
               onTap: () => _loadPicker(ImageSource.gallery)
             ),
             ListTile(
-              title: Row(children: [
+              title: Row(children: const [
                 Icon(Icons.photo_camera),
                 SizedBox(width: 10,),
                 Text('Tire uma photo'),
