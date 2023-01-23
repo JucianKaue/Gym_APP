@@ -6,9 +6,9 @@ import 'package:gym_app/pages/personal/profile.page.dart';
 import 'package:gym_app/pages/personal/todolist.page.dart';
 
 class PersonalHomepage extends StatefulWidget {
-  var personalId;
+  int userID;
 
-  PersonalHomepage(this.personalId, {Key? key}) : super(key: key);
+  PersonalHomepage({Key? key, required this.userID}) : super(key: key);
 
   @override
   State<PersonalHomepage> createState() => _PersonalHomepageState();
@@ -54,7 +54,7 @@ class _PersonalHomepageState extends State<PersonalHomepage> {
           BottomNavigationBarItem(label: 'Meu Perfil', icon: Icon(Icons.account_circle)),
         ],
         onTap: (index) {
-          pc.animateToPage(index, duration: Duration(milliseconds: 1000), curve: Curves.linear);
+          pc.animateToPage(index, duration: Duration(milliseconds: 600), curve: Curves.ease);
           
         },
       ),

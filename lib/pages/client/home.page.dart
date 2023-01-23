@@ -6,14 +6,14 @@ import 'package:gym_app/pages/client/profile.page.dart';
 
 class ClientHomepage extends StatefulWidget {
   var clientId;
-
-  ClientHomepage(this.clientId, {Key? key}) : super(key: key);
+  ClientHomepage({Key? key}) : super(key: key);
 
   @override
   State<ClientHomepage> createState() => _ClientHomepageState();
 }
 
 class _ClientHomepageState extends State<ClientHomepage> {
+
   int _indexPage = 0;
   late PageController pc;
 

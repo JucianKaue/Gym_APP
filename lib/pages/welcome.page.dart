@@ -35,7 +35,7 @@ class Welcomepage extends StatelessWidget {
               ),
               child: Text('REGISTER'),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterPage()));
               },
             )
           ],

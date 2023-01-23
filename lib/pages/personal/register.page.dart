@@ -85,7 +85,7 @@ class _RegisterPersonalPageState extends State<RegisterPersonalPage> {
                             child: Text(option[1]),
                           )).toList(),
                           decoration: InputDecoration(
-                            label: const Text('Objetivo', style: TextStyle(fontSize: 20),),
+                            label: const Text('Especialidade', style: TextStyle(fontSize: 20),),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8)
                             ),
