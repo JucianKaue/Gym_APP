@@ -24,7 +24,7 @@ class _RegisterPersonalPageState extends State<RegisterPersonalPage> {
   final _especialty = ValueNotifier(''); // Selected value from dropdown menu
   final List _dropDownEspecialties = [
     [0, 'Emagrecimento'],
-    [2, 'Ganho de massa']
+    [1, 'Ganho de massa muscular']
   ];
 
 

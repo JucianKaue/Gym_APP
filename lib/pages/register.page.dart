@@ -114,6 +114,9 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                       style: const TextStyle(fontSize: 20),
                       validator: ((value) => combine([
                         () => isNotEmpty(value),
+                        () => isValidUsername(value),
+                        () => minLength(value, 4),
+                        () => maxLength(value, 45)
                       ])),
                       controller: _usernameController,
                     ),
@@ -126,7 +129,12 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => isValidPassword(value),
+                        () => maxLength(value, 45),
+                        () => passwordsMatch(_passwordController.text, _passwordConfirmController.text)
+                      ])),
                       controller: _passwordController,
                     ),
                     TextFormField( // Password confirmation form field
@@ -137,7 +145,12 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => isValidPassword(value),
+                        () => maxLength(value, 45),
+                        () => passwordsMatch(_passwordController.text, _passwordConfirmController.text)
+                      ])),
                       controller: _passwordConfirmController,
                     ),
                     
@@ -153,7 +166,10 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => maxLength(value, 100)
+                      ])),
                       controller: _nameController,
                     ),
                     
@@ -164,7 +180,11 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => isValidEmail(value),
+                        () => maxLength(value, 45)
+                      ])),
                       controller: _emailController,
                     ),
                     
@@ -194,7 +214,10 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => isValidCpf(value)
+                      ])),
                       controller: _cpfController,
                     ),
                     
@@ -233,7 +256,10 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => maxLength(value, 45)
+                      ])),
                       controller: _addressController,
                     ),
                     
@@ -247,7 +273,10 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => maxLength(value, 45)
+                      ])),
                       controller: _streetController,
                     ),
                     
@@ -258,7 +287,10 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
-                      validator: ((value) => isNotEmpty(value)),
+                      validator: ((value) => combine([
+                        () => isNotEmpty(value),
+                        () => maxLength(value, 45)
+                      ])),
                       controller: _numberController,
                     ),
                     
@@ -272,6 +304,7 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         labelStyle: LabelTextStyle
                       ),
                       style: const TextStyle(fontSize: 20),
+                      validator: ((value) => maxLength(value, 45)),
                       controller: _addressComplementController,
                     ),
                     
@@ -334,63 +367,92 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                         child: Text('CONTINUAR')
                       ),
                       onPressed: () async {
-                        
-                        if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data'))
-                          );
-                          // Connect to the database
-                          final conn = await MySqlConnection.connect(
-                            ConnectionSettings(
-                              host: '192.168.0.112',
-                              port: 3306,
-                              user: 'jucian',
-                              db: 'app_personal',
-                              password: 'Keua@54893',
-                              timeout: const Duration(seconds: 10)
-                            )
-                          );
-                          // Add addres to the dataase
-                          var addreses_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
-                          if (addreses_count == null) {addreses_count = 0;} else {addreses_count = addreses_count+1;};
-                          await conn.query(
-                            'INSERT INTO address (id, cep, address, street, number, complement) VALUES (?, ?, ?, ?, ?, ?)',
-                            [
-                              addreses_count,
-                              _cepController.text,
-                              _addressController.text, 
-                              _streetController.text,
-                              _numberController.text,
-                              _addressComplementController.text
-                            ]
-                          );
-                          // Add the user to the database.
-                          int? users_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
-                          if (users_count == null) {users_count = 0;} else {users_count = users_count+1;};
-                          await conn.query(
-                            'INSERT INTO app_personal.user (id, username, password, name, photo_url, cpf, typeuser, address_id, email_address, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                            [
-                              users_count,
-                              _usernameController.text,
-                              _passwordController.text,
-                              _nameController.text,
-                              users_count,
-                              _cpfController.text,
-                              _selections.indexOf(true),
-                              addreses_count,
-                              _emailController.text,
-                              _phoneController.text
-                            ]
-                          );
-                          
-                          print(_selections.indexOf(true) == 1);
-                          if (_selections.indexOf(true) == 0) {
+                        try {
+                          if (_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Processing Data'))
+                            );
+                            // Connect to the database
+                            final conn = await MySqlConnection.connect(
+                              ConnectionSettings(
+                                host: '192.168.0.112',
+                                port: 3306,
+                                user: 'jucian',
+                                db: 'app_personal',
+                                password: 'Keua@54893',
+                                timeout: const Duration(seconds: 10)
+                              )
+                            );
+                            // Add addres to the dataase
+                            var addreses_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
+                            if (addreses_count == null) {addreses_count = 0;} else {addreses_count = addreses_count+1;};
+                            await conn.query(
+                              'INSERT INTO address (id, cep, address, street, number, complement) VALUES (?, ?, ?, ?, ?, ?)',
+                              [
+                                addreses_count,
+                                _cepController.text,
+                                _addressController.text, 
+                                _streetController.text,
+                                _numberController.text,
+                                _addressComplementController.text
+                              ]
+                            );
+                            // Add the user to the database.
+                            int? users_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
+                            if (users_count == null) {users_count = 0;} else {users_count = users_count+1;};
+                            await conn.query(
+                              'INSERT INTO app_personal.user (id, username, password, name, photo_url, cpf, typeuser, address_id, email_address, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                              [
+                                users_count,
+                                _usernameController.text,
+                                _passwordController.text,
+                                _nameController.text,
+                                users_count,
+                                _cpfController.text,
+                                _selections.indexOf(true),
+                                addreses_count,
+                                _emailController.text,
+                                _phoneController.text
+                              ]
+                            );
                             
-                          } else if (_selections.indexOf(true) == 1) {
-                            sleep(const Duration(seconds: 1));
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(users_count)));
+                            print(_selections.indexOf(true) == 1);
+                            if (_selections.indexOf(true) == 0) {
+                              
+                            } else if (_selections.indexOf(true) == 1) {
+                              sleep(const Duration(seconds: 1));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(users_count)));
+                            }
                           }
+                        } catch (e) {
+                          print(e);
+                          List<String> error_message = [];
+                          if (e.toString().contains('username')) {
+                            error_message.add('Nome de Usuário já está cadastrado');
+                          }
+                          if (e.toString().contains('cpf')) {
+                            error_message.add('CPF já está cadastrado.');
+                          } 
+                          if (e.toString().contains('email_address_UNIQUE')) {
+                            error_message.add('Email já está cadastrado.');
+                          }
+                          if (e.toString().contains('phone')) {
+                            error_message.add('Numero de Celular já está cadastrado.');
+                          }
+                          String message = '';
+                          for (var element in error_message) {
+                            if (error_message[error_message.length-1] == element) {
+                              message = '$message - $element';
+                            } else {
+                              message = '$message - $element\n';
+                            }
+                          }
+                          
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(message))
+                          );
                         }
+                        
                       }, 
                     ),
                     const SizedBox(height: 30,)
@@ -403,29 +465,6 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
     );
   }
 
-  // _nullformvalidation(value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Esse campo não pode estar vazio!!!';
-  //   }
-  //   return null;
-  // }
-
-  // _usernameFormValidation(value) async {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Esse campo não pode estar vazio!!!';
-  //   } 
-    
-  // }
-
-  // _passwordValidation(value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Esse campo não pode estar vazio!!!';
-  //   } else if (_passwordConfirmController.text != _passwordController.text) {
-  //     return 'As senhas não são iguais';
-  //   }
-  //   return null;
-  // }
-  
   void _showPickOptionsDialog(BuildContext context) {
     showDialog(
       context: context,

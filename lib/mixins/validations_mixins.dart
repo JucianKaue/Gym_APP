@@ -15,11 +15,11 @@ mixin ValidationMixin {
   String? isValidPassword(String? value) {
     final emailRegExp = RegExp(r'^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[!@#\><*~]).{8,}');
     if (emailRegExp.hasMatch(value!)) return null;
-    return 'A senha precisa ter no mínimo uma letra, um número, um caractere especial e 8 digitos.';
+    return 'A senha precisa ter no mínimo:\n - uma letra;\n - um número;\n - um caractere especial;\n - 8 digitos.';
   }
 
   String? isValidEmail(String? value) {
-    final emailRegExp = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    final emailRegExp = RegExp(r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
     if (emailRegExp.hasMatch(value!)) return null;
     return 'Email Incorreto!';
   }
@@ -30,17 +30,17 @@ mixin ValidationMixin {
   }
 
   String? passwordsMatch(String? password1, String? password2)  {
-    if (password1 != password2) return 'As senhas diferentes.';
+    if (password1 != password2) return 'As senhas estão diferentes.';
     return null;
   }
 
   String? maxLength(String? value, int num, [String? message]) {
-    if (value!.length > num) return 'O numéro maximo de caracteres é $num';
+    if (value!.length > num) return message ?? 'O numéro maximo de caracteres é $num';
     return null;
   }
 
   String? minLength(String? value, int num, [String? message]) {
-    if (value!.length < num) return 'O numéro maximo de caracteres é $num';
+    if (value!.length < num) return message ?? 'O numéro maximo de caracteres é $num';
     return null;
   }
 
