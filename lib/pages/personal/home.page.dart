@@ -5,14 +5,16 @@ import 'package:gym_app/pages/personal/clients.page.dart';
 import 'package:gym_app/pages/personal/profile.page.dart';
 import 'package:gym_app/pages/personal/todolist.page.dart';
 
-class Homepage extends StatefulWidget {
-  Homepage({Key? key}) : super(key: key);
+class PersonalHomepage extends StatefulWidget {
+  var personalId;
+
+  PersonalHomepage(this.personalId, {Key? key}) : super(key: key);
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<PersonalHomepage> createState() => _PersonalHomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _PersonalHomepageState extends State<PersonalHomepage> {
   int _indexPage = 0;
   late PageController pc;
 

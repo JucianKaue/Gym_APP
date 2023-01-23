@@ -4,9 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 
-import 'package:gym_app/utils.dart';
-
-import 'package:gym_app/pages/client/register.page.dart';
 import 'package:gym_app/pages/personal/register.page.dart';
 
 import 'dart:io';

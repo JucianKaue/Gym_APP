@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:gym_app/pages/client/availabepersonals.page.dart';
 import 'package:gym_app/pages/client/profile.page.dart';
 
-class Homepage extends StatefulWidget {
-  Homepage({Key? key}) : super(key: key);
+class ClientHomepage extends StatefulWidget {
+  var clientId;
+
+  ClientHomepage(this.clientId, {Key? key}) : super(key: key);
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<ClientHomepage> createState() => _ClientHomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _ClientHomepageState extends State<ClientHomepage> {
   int _indexPage = 0;
   late PageController pc;
 

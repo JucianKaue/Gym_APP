@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gym_app/pages/login.page.dart';
+import 'package:gym_app/pages/register.page.dart';
 
 class Welcomepage extends StatelessWidget {
 
@@ -20,13 +21,22 @@ class Welcomepage extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
             ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 20),
-                  ),
-                  child: Text('LOGIN'),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
+              style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              child: Text('LOGIN'),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              child: Text('REGISTER'),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+              },
             )
           ],
 

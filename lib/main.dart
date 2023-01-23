@@ -4,6 +4,7 @@ import 'pages/welcome.page.dart';
 
 import 'package:gym_app/pages/register.page.dart';
 import 'package:gym_app/pages/personal/register.page.dart';
+import 'package:gym_app/pages/welcome.page.dart';
 
 
 void main() async {
@@ -49,8 +50,7 @@ class MyApp extends StatelessWidget {
           bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
         )
       ),
-      // home: Welcomepage(),
-      home: RegisterPage(),
+      home: Welcomepage(),
     );
   }
 }
