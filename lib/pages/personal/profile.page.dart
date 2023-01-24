@@ -26,8 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     timeout: const Duration(seconds: 10)
                   )
                 );
-    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.idespecialty = personal.especialty_id WHERE user.id = ${userID};");
-    print(result);
+    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id WHERE user.id = $userID;");
     return result.elementAt(0);
   }
 
@@ -43,9 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
     
       Padding(
         padding: const EdgeInsets.all(16.0),
-        child: 
-        
-        FutureBuilder(
+        child: FutureBuilder(
           future: _getuser(),
           builder:(context, snapshot) {
             if (snapshot.hasData) {
@@ -105,15 +102,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text(
                     " ${snapshot.data[3]}",
                     style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // Text("Altura: $_height cm.", style: Theme.of(context).textTheme.bodyText2,),
-                      // Text("Idade: $_age anos", style: Theme.of(context).textTheme.bodyText2,),
-                      // Text("Peso: $_weight kg", style: Theme.of(context).textTheme.bodyText2,)
-                    ],
                   ),
                 ],
               );

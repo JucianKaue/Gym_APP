@@ -5,15 +5,18 @@ import 'package:gym_app/pages/client/availabepersonals.page.dart';
 import 'package:gym_app/pages/client/profile.page.dart';
 
 class ClientHomepage extends StatefulWidget {
-  var userID;
-  ClientHomepage({userID, Key? key}) : super(key: key);
+  int userID;
+  ClientHomepage({required this.userID, Key? key}) : super(key: key);
 
   @override
-  State<ClientHomepage> createState() => _ClientHomepageState();
+  State<ClientHomepage> createState() => _ClientHomepageState(userID);
 }
 
 class _ClientHomepageState extends State<ClientHomepage> {
-
+  
+  int userID;
+  _ClientHomepageState(this.userID);
+  
   int _indexPage = 0;
   late PageController pc;
 
@@ -31,12 +34,13 @@ class _ClientHomepageState extends State<ClientHomepage> {
 
   @override
   Widget build(BuildContext context) {
+    print('==================================================1');
     return Scaffold(
       body: PageView(
         controller: pc,
         children: [
           AvailablePersonals(),
-          ProfilePage(),
+          ProfilePage(userID),
           // Todo List
           // Profile
         ],
