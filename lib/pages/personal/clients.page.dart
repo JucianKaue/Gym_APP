@@ -16,7 +16,7 @@ class _StudentListPageState extends State<StudentListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Alunos'))
+        title: const Center(child: Text('Alunos'))
       ),
       body: ListView.builder(
         itemCount: students.length,
@@ -55,17 +55,16 @@ class StudentCard extends StatelessWidget {
                         this.student.photo,
                         width: 64,
                         height: 64,
+                        errorBuilder: ((context, error, stackTrace) => Image.asset('assets/generic-person-icon.png', height: 64, width: 64,)),
                       ),
                     ),
-                    SizedBox(
-                      width: 15,
-                    ),
+                    const SizedBox(width: 15),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${this.student.name}',
-                          style: TextStyle(
+                          this.student.name,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -76,9 +75,9 @@ class StudentCard extends StatelessWidget {
                   ],)
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                 child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: ClipOval(
                       child: InkWell(
                         onTap: () {
@@ -88,7 +87,7 @@ class StudentCard extends StatelessWidget {
                           width: 40,
                           height: 40,
                           color: Colors.amberAccent,
-                          child: Icon(Icons.chat, size: 16,)
+                          child: const Icon(Icons.chat, size: 16,)
                         )
                       )                    
                     ),
