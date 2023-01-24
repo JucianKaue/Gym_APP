@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Material(
                             color: Colors.transparent,
                             child: Image.network(
-                              snapshot.data[1],
+                              snapshot.data['photo_url'],
                               width: 150,
                               height: 150,
                               errorBuilder: ((context, error, stackTrace) => Image.asset('assets/generic-person-icon.png', height: 150, width: 150,)),
@@ -89,32 +89,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(height: 8),
                   Center(
                     child: Text(
-                      '${snapshot.data[0]}',
+                      '${snapshot.data['name']}',
                       style: Theme.of(context).textTheme.headline3,
                     )
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "Objetivo: ${snapshot.data[2]}",
+                    "Objetivo: ${snapshot.data['name_especialty']}",
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Limitações: ${snapshot.data[1]}",
+                    "Limitações: ${snapshot.data['limitation']}",
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(height: 10),
                   Text(
-                    '${snapshot.data[3]}',
+                    'Descrição: ${snapshot.data['description']}',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Altura: ${snapshot.data[4]} cm.", style: Theme.of(context).textTheme.bodyText2,),
-                      Text("Idade: ${snapshot.data[5]} anos", style: Theme.of(context).textTheme.bodyText2,),
-                      Text("Peso: ${snapshot.data[6]}  kg", style: Theme.of(context).textTheme.bodyText2,)
+                      Text("Altura: ${snapshot.data['height']} cm.", style: Theme.of(context).textTheme.bodyText2,),
+                      Text("Idade: ${snapshot.data['age']} anos", style: Theme.of(context).textTheme.bodyText2,),
+                      Text("Peso: ${snapshot.data['weight']}  kg", style: Theme.of(context).textTheme.bodyText2,)
                     ],
                   ),
                 ],

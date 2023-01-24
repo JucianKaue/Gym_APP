@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Material(
                             color: Colors.transparent,
                             child: Image.network(
-                              snapshot.data[1],
+                              snapshot.data['photo_url'],
                               width: 150,
                               height: 150,
                               errorBuilder: ((context, error, stackTrace) => Image.asset('assets/generic-person-icon.png', height: 150, width: 150,)),
@@ -89,18 +89,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(height: 8),
                   Center(
                     child: Text(
-                      snapshot.data[0],
+                      snapshot.data['name'],
                       style: Theme.of(context).textTheme.headline3,
                     )
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Especialidade: ${snapshot.data[2]}",
+                    "Especialidade: ${snapshot.data['name_especialty']}",
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(height: 16),
                   Text(
-                    " ${snapshot.data[3]}",
+                    " ${snapshot.data['description']}",
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ],

@@ -91,7 +91,7 @@ class LoginPage extends StatelessWidget with ValidationMixin {
                     
                     var user = await conn.query("SELECT id, typeuser FROM user WHERE username='${_usernameController.text}' AND password='${_passwordController.text}';");
                     print('=============================================================');
-                    print(user.elementAt(0)[0][0]);
+                    print(user.elementAt(0)[0]);
                     if (user.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Usuário ou senha incorreto'))

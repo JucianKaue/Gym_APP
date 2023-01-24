@@ -34,7 +34,6 @@ class _ClientHomepageState extends State<ClientHomepage> {
 
   @override
   Widget build(BuildContext context) {
-    print('==================================================1');
     return Scaffold(
       body: PageView(
         controller: pc,
@@ -52,14 +51,14 @@ class _ClientHomepageState extends State<ClientHomepage> {
         selectedItemColor: Colors.amber,
         unselectedItemColor: Colors.black54,
         currentIndex: _indexPage,
-        items: [
+        items: const [
           BottomNavigationBarItem(label: 'Procurar Personal', icon: Icon(Icons.search),),
           BottomNavigationBarItem(label: 'Meu Personal', icon: Icon(Icons.badge)),
           BottomNavigationBarItem(label: 'Meu Treino', icon: Icon(Icons.fitness_center)),
           BottomNavigationBarItem(label: 'Meu Perfil', icon: Icon(Icons.account_circle)),
         ],
         onTap: (index) {
-          pc.animateToPage(index, duration: Duration(milliseconds: 400), curve: Curves.linear);
+          pc.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.linear);
         },
       ),
     );
