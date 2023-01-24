@@ -5,6 +5,7 @@ import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gym_app/pages/personal/register.page.dart';
+import 'package:gym_app/pages/client/register.page.dart';
 
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
@@ -395,16 +396,16 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                               ]
                             );
                             // Add the user to the database.
-                            int? users_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
-                            if (users_count == null) {users_count = 0;} else {users_count = users_count+1;};
+                            int? user_Id= (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
+                            if (user_Id == null) {user_Id = 0;} else {user_Id = user_Id+1;};
                             await conn.query(
                               'INSERT INTO app_personal.user (id, username, password, name, photo_url, cpf, typeuser, address_id, email_address, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                               [
-                                users_count,
+                                user_Id,
                                 _usernameController.text,
                                 _passwordController.text,
                                 _nameController.text,
-                                users_count,
+                                user_Id,
                                 _cpfController.text,
                                 _selections.indexOf(true),
                                 addreses_count,
@@ -413,12 +414,11 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                               ]
                             );
                             
-                            print(_selections.indexOf(true) == 1);
+                            sleep(const Duration(milliseconds: 100));
                             if (_selections.indexOf(true) == 0) {
-                              
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterClientPage(user_Id)));
                             } else if (_selections.indexOf(true) == 1) {
-                              sleep(const Duration(seconds: 1));
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(users_count)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(user_Id)));
                             }
                           }
                         } catch (e) {

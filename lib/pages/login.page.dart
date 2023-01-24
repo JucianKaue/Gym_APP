@@ -97,7 +97,7 @@ class LoginPage extends StatelessWidget with ValidationMixin {
                       );
                     } else {
                       if (user.elementAt(0)[1] == 0) {
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => ClientHomepage(us)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientHomepage(userID: user.elementAt(0)[0])));
                       } else if (user.elementAt(0)[1] == 1) {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PersonalHomepage(userID: user.elementAt(0)[0])));
                       }

@@ -5,8 +5,8 @@ import 'package:gym_app/pages/client/availabepersonals.page.dart';
 import 'package:gym_app/pages/client/profile.page.dart';
 
 class ClientHomepage extends StatefulWidget {
-  var clientId;
-  ClientHomepage({Key? key}) : super(key: key);
+  var userID;
+  ClientHomepage({userID, Key? key}) : super(key: key);
 
   @override
   State<ClientHomepage> createState() => _ClientHomepageState();

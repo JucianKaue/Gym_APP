@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cpf_cnpj_validator/cpf_validator.dart';
 
 mixin ValidationMixin {
@@ -31,6 +33,33 @@ mixin ValidationMixin {
 
   String? passwordsMatch(String? password1, String? password2)  {
     if (password1 != password2) return 'As senhas estão diferentes.';
+    return null;
+  }
+
+  String? isAge(int? age) {
+    if (age! > 122) {
+      return "Você tem $age anos??\nParabéns, você está no Guinness Book!";
+    } else if (age < 0) {
+      return "Infelizmente você precisa ter nascido para entrar no app,\n espere ${age*-1} anos ou coloque uma idade positiva.";
+    }
+    return null;
+  }
+
+  String? isHeight(int? height) {
+    if (height! > 274) {
+      return "Você tem $height cm de altura??\nParabéns, você está no Guinness Book!";
+    } else if (height <= 0) {
+      return "Você precisa existir para criar uma conta.\nA sua altura precisa ser maior que 0.";
+    }
+    return null;
+  }
+
+  String? isWeigth(int? weight) {
+    if (weight! > 597) {
+      return "Você deveria estar no Guinness Book.\nPorém isso é preocupante...";
+    } else if (weight < 0) {
+      return "Você precisa existir para criar uma conta.\nO seu peso precisa ser maior que 0.";
+    }
     return null;
   }
 

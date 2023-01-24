@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gym_app/pages/client/register.page.dart';
 import 'package:mysql1/mysql1.dart';
 import 'pages/welcome.page.dart';
 
 import 'package:gym_app/pages/register.page.dart';
-import 'package:gym_app/pages/personal/register.page.dart';
+import 'package:gym_app/pages/client/register.page.dart';
 import 'package:gym_app/pages/welcome.page.dart';
 
 
