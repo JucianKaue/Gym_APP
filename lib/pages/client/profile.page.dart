@@ -30,15 +30,11 @@ class _ProfilePageState extends State<ProfilePage> {
     return result.elementAt(0);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    var _themeIcon = Icon(Icons.dark_mode);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Center(child: Text('Perfil'))
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

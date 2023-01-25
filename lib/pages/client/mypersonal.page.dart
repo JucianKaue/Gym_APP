@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
 
-
-class ProfilePage extends StatefulWidget {
+class MyPersonalPage extends StatefulWidget {
   int userID;
-  ProfilePage(this.userID, {super.key});
-  
+  MyPersonalPage(this.userID);
+
   @override
-  _ProfilePageState createState() => _ProfilePageState(userID);
+  _MyPersonalPageState createState() => _MyPersonalPageState(userID);
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _MyPersonalPageState extends State<MyPersonalPage> {
   int userID;
-  _ProfilePageState(this.userID);
+  _MyPersonalPageState(this.userID);
   
   Future _getuser() async {
     final conn = await MySqlConnection.connect(
@@ -36,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Center(child: Text('Meu Personal'))
       ),
       body: 
     
@@ -45,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: FutureBuilder(
           future: _getuser(),
           builder:(context, snapshot) {
+            print(snapshot.data);
             if (snapshot.hasData) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,3 +114,5 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
+

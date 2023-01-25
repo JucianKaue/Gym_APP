@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:gym_app/pages/client/availabepersonals.page.dart';
 import 'package:gym_app/pages/client/profile.page.dart';
+import 'package:gym_app/pages/client/mypersonal.page.dart';
+import 'package:gym_app/pages/client/trainings.dart';
 
 class ClientHomepage extends StatefulWidget {
   int userID;
@@ -13,9 +15,10 @@ class ClientHomepage extends StatefulWidget {
 }
 
 class _ClientHomepageState extends State<ClientHomepage> {
-  
   int userID;
   _ClientHomepageState(this.userID);
+
+  List pages = [];
   
   int _indexPage = 0;
   late PageController pc;
@@ -32,36 +35,61 @@ class _ClientHomepageState extends State<ClientHomepage> {
     });
   }
 
+  Future _getuser() async {
+    final conn = await MySqlConnection.connect(
+                  ConnectionSettings(
+                    host: '192.168.0.112',
+                    port: 3306,
+                    user: 'jucian',
+                    db: 'app_personal',
+                    password: 'Keua@54893',
+                    timeout: const Duration(seconds: 10)
+                  )
+                );
+    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id WHERE user.id = $userID;");
+    return result.elementAt(0);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: pc,
-        children: [
-          AvailablePersonals(userID),
-          ProfilePage(userID),
-          // Todo List
-          // Profile
-        ],
-        onPageChanged: (index) {
-          setCurrentPage(index);
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.black54,
-        currentIndex: _indexPage,
-        items: const [
-          BottomNavigationBarItem(label: 'Procurar Personal', icon: Icon(Icons.search),),
-          BottomNavigationBarItem(label: 'Meu Personal', icon: Icon(Icons.badge)),
-          BottomNavigationBarItem(label: 'Meu Treino', icon: Icon(Icons.fitness_center)),
-          BottomNavigationBarItem(label: 'Meu Perfil', icon: Icon(Icons.account_circle)),
-        ],
-        onTap: (index) {
-          pc.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.linear);
-        },
-      ),
+    pages.addAll([
+      [
+        AvailablePersonals(userID),
+        MyPersonalPage(userID),
+        TrainigsPage(userID),
+        ProfilePage(userID),
+      ],
+      [
+        const BottomNavigationBarItem(label: 'Procurar Personal', icon: Icon(Icons.search)),
+        const BottomNavigationBarItem(label: 'Meu Personal', icon: Icon(Icons.badge)),
+        const BottomNavigationBarItem(label: 'Meu Treino', icon: Icon(Icons.fitness_center)),
+        const BottomNavigationBarItem(label: 'Meu Perfil', icon: Icon(Icons.account_circle)),
+      ],
+    ]);
+    return FutureBuilder(
+      future: _getuser(),
+      builder: (context, snapshot) {
+        return Scaffold(
+          body: PageView(
+            controller: pc,
+            children: pages[0],
+            onPageChanged: (index) {
+              setCurrentPage(index);
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: Colors.amber,
+            unselectedItemColor: Colors.black54,
+            currentIndex: _indexPage,
+            items: pages[1],
+            onTap: (index) {
+              pc.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.linear);
+            },
+          ),
+        );
+      },
     );
+    
   }
 }
 

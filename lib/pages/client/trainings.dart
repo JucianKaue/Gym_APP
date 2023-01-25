@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
 
-
-class ProfilePage extends StatefulWidget {
+class TrainigsPage extends StatefulWidget {
   int userID;
-  ProfilePage(this.userID, {super.key});
-  
+  TrainigsPage(this.userID);
+
   @override
-  _ProfilePageState createState() => _ProfilePageState(userID);
+  _TrainigsPageState createState() => _TrainigsPageState(userID);
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _TrainigsPageState extends State<TrainigsPage> {
   int userID;
-  _ProfilePageState(this.userID);
-  
+  _TrainigsPageState(this.userID);
+
   Future _getuser() async {
     final conn = await MySqlConnection.connect(
                   ConnectionSettings(
@@ -26,25 +25,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     timeout: const Duration(seconds: 10)
                   )
                 );
-    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id WHERE user.id = $userID;");
+    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, client.limitation, client.description, client.height, client.age, client.weight FROM user JOIN client ON client.user_id = user.id JOIN especialty ON client.especialty_id = especialty.id WHERE user.id = $userID;");
+    print(result);
     return result.elementAt(0);
   }
 
   @override
   Widget build(BuildContext context) {
-    var _themeIcon = Icon(Icons.dark_mode);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Center(child: Text('Treinos'))
       ),
-      body: 
-    
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder(
           future: _getuser(),
-          builder:(context, snapshot) {
+          builder: ((context, snapshot) {
             if (snapshot.hasData) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,28 +85,45 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(height: 8),
                   Center(
                     child: Text(
-                      snapshot.data['name'],
+                      '${snapshot.data['name']}',
                       style: Theme.of(context).textTheme.headline3,
                     )
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Especialidade: ${snapshot.data['name_especialty']}",
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
                   SizedBox(height: 16),
                   Text(
-                    " ${snapshot.data['description']}",
+                    "Objetivo: ${snapshot.data['name_especialty']}",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Limitações: ${snapshot.data['limitation']}",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Descrição: ${snapshot.data['description']}',
                     style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("Altura: ${snapshot.data['height']} cm.", style: Theme.of(context).textTheme.bodyText2,),
+                      Text("Idade: ${snapshot.data['age']} anos", style: Theme.of(context).textTheme.bodyText2,),
+                      Text("Peso: ${snapshot.data['weight']}  kg", style: Theme.of(context).textTheme.bodyText2,)
+                    ],
                   ),
                 ],
               );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
-          },
-        ),
+          } 
+        )
+      ),
       )
     );
   }
 }
+
+
