@@ -38,7 +38,7 @@ class _ClientHomepageState extends State<ClientHomepage> {
       body: PageView(
         controller: pc,
         children: [
-          AvailablePersonals(),
+          AvailablePersonals(userID),
           ProfilePage(userID),
           // Todo List
           // Profile

@@ -219,9 +219,7 @@ class _RegisterClientPageState extends State<RegisterClientPage> with Validation
                               _objective.value,
                             ]
                           );
-
-                          
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
                         }
                       }, 
                     ),
