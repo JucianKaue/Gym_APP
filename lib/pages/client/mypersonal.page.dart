@@ -25,7 +25,11 @@ class _MyPersonalPageState extends State<MyPersonalPage> {
                     timeout: const Duration(seconds: 10)
                   )
                 );
-    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id WHERE user.id = $userID;");
+    var result = await conn.query("""SELECT user.name, e.name_especialty, user.photo_url, p.description FROM client c 
+                                  JOIN client_has_personal cp ON c.user_id = cp.client_user_id
+                                  JOIN personal p ON cp.personal_user_id = p.user_id
+                                  JOIN especialty e ON e.id = p.especialty_id
+                                  JOIN user ON user.id = p.user_id WHERE c.user_id = 1;""");
     return result.elementAt(0);
   }
 

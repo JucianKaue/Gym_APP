@@ -63,7 +63,7 @@ class AvailablePersonals extends StatelessWidget {
                     timeout: const Duration(seconds: 10)
                   )
                 );
-    var result = await conn.query("SELECT COUNT(*), user.name, user.photo_url, especialty.name_especialty, personal.score, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id;");
+    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.score, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id;");
     return result;
   }
 
@@ -82,11 +82,16 @@ class AvailablePersonals extends StatelessWidget {
   //   return result;
   // }
 
-  _buildStarsScore(double number) {
+  _buildStarsScore(double? number) {
+    if (number == null) {
+      return const SizedBox(height: 0,);
+    }
+
+    var integerPart = int.parse(number.toString().split('.')[1]);
     var decimalPart = number.toString().split('.')[1];
 
     List<Widget> stars = [];
-    for (var i=1; i<=5; i++) {
+    for (int i=1; i<=5; i++) {
       if (number > i) {
         stars.add(
           SizedBox(
@@ -107,7 +112,53 @@ class AvailablePersonals extends StatelessWidget {
             ),
           )
         );
-      } else {
+      } else if ('${number.toInt()}' == '$i') {
+        if ('$decimalPart' == '0') {
+          stars.add(
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: ClipPath(
+                clipper: StarClipper(5),
+                child: Container(
+                  height: 150,
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Container(color: Colors.amber,)
+                      ),
+                  ],)
+                ),
+              ),
+            )
+          );
+        } else {
+          stars.add(
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: ClipPath(
+                clipper: StarClipper(5),
+                child: Container(
+                  height: 150,
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: int.parse(decimalPart),
+                        child: Container(color: Colors.amber,)
+                      ),
+                      Flexible(
+                        flex: (int.parse(decimalPart)-math.pow(10, decimalPart.length).toInt())*(-1),
+                        child: Container(color: Color.fromARGB(255, 117, 117, 117),)
+                      ),
+                  ],)
+                ),
+              ),
+            )
+          );
+        }
+      } else if (number < i) {
         stars.add(
           SizedBox(
             width: 20,
@@ -119,11 +170,7 @@ class AvailablePersonals extends StatelessWidget {
                 child: Row(
                   children: [
                     Flexible(
-                      flex: int.parse(decimalPart),
-                      child: Container(color: Colors.amber,)
-                    ),
-                    Flexible(
-                      flex: (int.parse(decimalPart)-math.pow(10, decimalPart.length).toInt())*(-1),
+                      flex: 1,
                       child: Container(color: Color.fromARGB(255, 117, 117, 117),)
                     ),
                 ],)
@@ -134,7 +181,7 @@ class AvailablePersonals extends StatelessWidget {
       }
     }
 
-    return stars;
+    return Row(children: stars);
   }
 
   @override
@@ -154,7 +201,7 @@ class AvailablePersonals extends StatelessWidget {
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
-            itemCount: snapshot.data.elementAt(0)[0],
+            itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
               return ListTile(
                 title: Card(
@@ -184,11 +231,8 @@ class AvailablePersonals extends StatelessWidget {
                                   Text('${snapshot.data.elementAt(index)["name"].split(" ")[0]}', style: const TextStyle(fontSize: 20)),
                                   
                                   // grade
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: _buildStarsScore(4.55),
-                                  )
-                                  ,
+                                  _buildStarsScore(double.tryParse(snapshot.data.elementAt(index)["score"].toString())),
+                                  
                                 ],
                               ),
                             ),
@@ -212,8 +256,10 @@ class AvailablePersonals extends StatelessWidget {
                             Container(
                               width: 150,
                               child: ElevatedButton(
-                                onPressed: () {}, 
-                                child: Text('CONTATO'),
+                                onPressed: () {
+
+                                }, 
+                                child: Text('MAIS INFORMAÇÕES'),
                               ),
                             )
                           ],
@@ -224,7 +270,22 @@ class AvailablePersonals extends StatelessWidget {
                     )
                   ),
                 ),
-                onLongPress: () => debugPrint('fdsiohgjknvjkxcbjzkvbhjfdhguiohfdvbjkcxbiudfhsg')
+                onLongPress: () {
+                  showDialog(
+                    context: context, 
+                    builder: (context) => AlertDialog(
+                        title: Text('Hi men'),
+                        content: Text('UM TEXTO AVULSO AQUI CARA'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => print('Encaminhar pra perfil'), 
+                            child: const Text('Entrar em contato')
+                          )
+                        ],
+                      )
+                    ,
+                  );
+                }
               );
             },
           );
