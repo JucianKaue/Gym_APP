@@ -186,7 +186,6 @@ class AvailablePersonals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
             appBar: AppBar(
               title: const Center(child: Text('Personais Disponíveis'))
@@ -196,7 +195,6 @@ class AvailablePersonals extends StatelessWidget {
   }
 
   buildListView() {
-    final itens = List<String>.generate(10000, (index) => "Item: ${index}");
     return FutureBuilder(
       future: _getpersonals(),
       builder: ((context, snapshot) {

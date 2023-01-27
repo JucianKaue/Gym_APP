@@ -55,7 +55,7 @@ class _PersonalHomepageState extends State<PersonalHomepage> {
       body: PageView(
         controller: pc,
         children: [
-          StudentListPage(),
+          ClientListPage(userID: userID),
           ToDoList(),
           ProfilePage(userID)
         ],

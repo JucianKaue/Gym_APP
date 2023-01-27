@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:mysql1/mysql1.dart';
 
 
-class StudentListPage extends StatefulWidget {
+class ClientListPage extends StatefulWidget {
+  int userID;
+
+  ClientListPage({super.key, required this.userID});
+ 
+  
+
   @override
-  State<StudentListPage> createState() => _StudentListPageState();
+  State<ClientListPage> createState() => _ClientListPageState(userID: userID);
 }
 
-class _StudentListPageState extends State<StudentListPage> {
-  final List<Student> students = [
-    Student('Leticia', 'Ganhar massa', 'https://img.freepik.com/fotos-gratis/mulher-com-rosto-serio_1149-1729.jpg?w=200'),
-    Student('Jucian', 'Perder Peso', 'https://instagram.fxap4-1.fna.fbcdn.net/v/t51.2885-19/165790675_484014792629498_3502541952523653363_n.jpg?stp=dst-jpg_s150x150&_nc_ht=instagram.fxap4-1.fna.fbcdn.net&_nc_cat=102&_nc_ohc=eYGcKnsA3M0AX_WaObw&edm=ACWDqb8BAAAA&ccb=7-5&oh=00_AfAsT38TD8GIYlVe1c4iJdKukR24M6ZJC4qsl32qlIUUoA&oe=63C031AC&_nc_sid=1527a3')
-  ];
+class _ClientListPageState extends State<ClientListPage> {
+  int userID;
+  _ClientListPageState({required this.userID});
+
+  _getClients() async {
+    final conn = await MySqlConnection.connect(
+                  ConnectionSettings(
+                    host: '192.168.0.112',
+                    port: 3306,
+                    user: 'jucian',
+                    db: 'app_personal',
+                    password: 'Keua@54893',
+                    timeout: const Duration(seconds: 10)
+                  )
+                );
+    var result = await conn.query("SELECT client_user_id, name, photo_url, name_especialty, state FROM user JOIN client ON client.user_id = user.id JOIN client_has_personal ON client_User_id = client.user_id JOIN especialty ON especialty.id = client.especialty_id WHERE client_has_personal.personal_User_id = ${userID};");
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +38,48 @@ class _StudentListPageState extends State<StudentListPage> {
       appBar: AppBar(
         title: const Center(child: Text('Alunos'))
       ),
-      body: ListView.builder(
-        itemCount: students.length,
-        itemBuilder: (context, index) {
-          return StudentCard(students[index]);
+      body: FutureBuilder(
+        future: _getClients(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.data);
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return ClientCard(Client(
+                  snapshot.data.elementAt(index)["client_user_id"],
+                  snapshot.data.elementAt(index)["name"],
+                  snapshot.data.elementAt(index)["name_especialty"],
+                  snapshot.data.elementAt(index)["photo_url"],
+                  snapshot.data.elementAt(index)["state"]
+                ));
+              },
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         },
       )
     );
   }
+
 }
 
-class StudentCard extends StatelessWidget {
-  final Student student;
+class ClientCard extends StatelessWidget {
+  final Client client;
 
-  const StudentCard(this.student);
+  ClientCard(this.client);
 
   @override
   Widget build(BuildContext context) {
     return 
     Card(
       child: InkWell(
-        onLongPress: () {
+        onTap: () {
           // Abrir perfil do aluno.
         },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -52,7 +89,7 @@ class StudentCard extends StatelessWidget {
                   children: [
                     ClipOval(
                       child: Image.network(
-                        this.student.photo,
+                        this.client.photo,
                         width: 64,
                         height: 64,
                         errorBuilder: ((context, error, stackTrace) => Image.asset('assets/generic-person-icon.png', height: 64, width: 64,)),
@@ -63,13 +100,13 @@ class StudentCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          this.student.name,
+                          this.client.name,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text('${this.student.objective}'),
+                        Text('${this.client.objective}'),
                       ],
                     ),
                   ],)
@@ -79,17 +116,68 @@ class StudentCard extends StatelessWidget {
                 child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: ClipOval(
-                      child: InkWell(
-                        onTap: () {
-                          // Abrir char com o aluno
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          color: Colors.amberAccent,
-                          child: const Icon(Icons.chat, size: 16,)
-                        )
-                      )                    
+                      child:
+                        this.client.state == 'CONFIRMAÇÃO DO PERSONAL PENDENTE' ? 
+                          Row(children: [
+                            ClipOval(
+                              child: InkWell(
+                                onTap: () async {
+                                  final conn = await MySqlConnection.connect(
+                                      ConnectionSettings(
+                                        host: '192.168.0.112',
+                                        port: 3306,
+                                        user: 'jucian',
+                                        db: 'app_personal',
+                                        password: 'Keua@54893',
+                                        timeout: const Duration(seconds: 10)
+                                      )
+                                    );
+                                  conn.query("UPDATE client_has_personal SET state = 'RECUSADA PELO PERSONAL' WHERE client_user_id = ${this.client.id}");
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  color: Colors.red,
+                                  child: Icon(Icons.cancel, size: 16,)
+                                ),
+                              )
+                            ),
+                            ClipOval(
+                              child: InkWell(
+                                onTap: () async {
+                                  final conn = await MySqlConnection.connect(
+                                      ConnectionSettings(
+                                        host: '192.168.0.112',
+                                        port: 3306,
+                                        user: 'jucian',
+                                        db: 'app_personal',
+                                        password: 'Keua@54893',
+                                        timeout: const Duration(seconds: 10)
+                                      )
+                                    );
+                                  conn.query("UPDATE client_has_personal SET state = 'PAGAMENTO PENDENTE' WHERE client_user_id = ${this.client.id}");
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  color: Colors.green,
+                                  child: Icon(Icons.task_alt, size: 16,)
+                                ),
+                              ),
+                            )
+                          ],)
+                           :       
+                        InkWell(
+                            onTap: () {
+                              // Abrir char com o aluno
+                            },
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              color: this.client.state == '' ? Colors.amberAccent : Colors.green,
+                              child: this.client.state == '' ? Icon(Icons.chat, size: 16,) : Icon(Icons.task_alt, size: 16,)
+                            ) 
+                          )             
                     ),
                   ),
                 ),
@@ -99,12 +187,15 @@ class StudentCard extends StatelessWidget {
       )
     );
   }
+
 }
 
-class Student {
+class Client {
+  int id;
   String name;
   String objective;
   String photo;
+  String state;
 
-  Student(this.name, this.objective, this.photo );
+  Client(this.id, this.name, this.objective, this.photo, this.state);
 }
