@@ -4,6 +4,7 @@ import 'package:gym_app/mixins/validations_mixins.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:gym_app/utils.dart';
 
 import 'package:gym_app/pages/personal/home.page.dart';
 import 'package:gym_app/pages/client/home.page.dart';
@@ -38,7 +39,6 @@ class LoginPage extends StatelessWidget with ValidationMixin {
   
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(
@@ -108,16 +108,7 @@ class LoginPage extends StatelessWidget with ValidationMixin {
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        final conn = await MySqlConnection.connect(
-                                  ConnectionSettings(
-                                    host: '192.168.0.112',
-                                    port: 3306,
-                                    user: 'jucian',
-                                    db: 'app_personal',
-                                    password: 'Keua@54893',
-                                    timeout: const Duration(seconds: 10)
-                                  )
-                                );
+                        final conn = await MySqlConnection.connect(DataBase().settings);
                         var user = await conn.query("SELECT id, typeuser FROM user WHERE username='${_usernameController.text}' AND password='${_passwordController.text}';");
                         if (user.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(

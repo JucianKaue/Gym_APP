@@ -1,6 +1,7 @@
 import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:gym_app/utils.dart';
 
 // This custom clipper help us achieve n-pointed star shape
 class StarClipper extends CustomClipper<Path> {
@@ -53,16 +54,7 @@ class AvailablePersonals extends StatelessWidget {
   
 
   Future _getpersonals() async {
-    final conn = await MySqlConnection.connect(
-                  ConnectionSettings(
-                    host: '192.168.0.112',
-                    port: 3306,
-                    user: 'jucian',
-                    db: 'app_personal',
-                    password: 'Keua@54893',
-                    timeout: const Duration(seconds: 10)
-                  )
-                );
+    final conn = await MySqlConnection.connect(DataBase().settings);
     var result = await conn.query("SELECT user.id, user.name, user.photo_url, especialty.name_especialty, personal.score, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id;");
     return result;
   }
@@ -387,16 +379,7 @@ class AvailablePersonals extends StatelessWidget {
             child: Text("CONTRATAR"),
             style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 7, 65, 255))),
             onPressed: () async {
-              final conn = await MySqlConnection.connect(
-                  ConnectionSettings(
-                    host: '192.168.0.112',
-                    port: 3306,
-                    user: 'jucian',
-                    db: 'app_personal',
-                    password: 'Keua@54893',
-                    timeout: const Duration(seconds: 10)
-                  )
-              );
+              final conn = await MySqlConnection.connect(DataBase().settings);
               try {
                 conn.query('INSERT INTO client_has_personal VALUES (?, ?, ?)', [userID, personal_info['id'], 'CONFIRMAÇÃO DO PERSONAL PENDENTE']);
               } catch (e) {

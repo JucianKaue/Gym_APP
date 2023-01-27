@@ -1,6 +1,7 @@
 import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 
+import 'package:gym_app/utils.dart';
 import 'package:gym_app/pages/client/availabepersonals.page.dart';
 import 'package:gym_app/pages/client/profile.page.dart';
 import 'package:gym_app/pages/client/mypersonal.page.dart';
@@ -36,16 +37,7 @@ class _ClientHomepageState extends State<ClientHomepage> {
   }
 
   Future _getuser() async {
-    final conn = await MySqlConnection.connect(
-                  ConnectionSettings(
-                    host: '192.168.0.112',
-                    port: 3306,
-                    user: 'jucian',
-                    db: 'app_personal',
-                    password: 'Keua@54893',
-                    timeout: const Duration(seconds: 10)
-                  )
-                );
+    final conn = await MySqlConnection.connect(DataBase().settings);
     var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id WHERE user.id = $userID;");
     return result.elementAt(0);
   }
@@ -89,27 +81,5 @@ class _ClientHomepageState extends State<ClientHomepage> {
         );
       },
     );
-    
   }
 }
-
-
-
-// class Homepage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Ola, PESSOUA'),
-//         backgroundColor: Colors.yellowAccent,
-//       ),
-//       body: Container(
-//         padding: EdgeInsets.all(50),
-//         child: 
-//         Column(children: [
-//         ],),
-//       ),
-//       bottomNavigationBar: DefaultClientBottomNavigationBar()
-//     );
-//   }
-// }

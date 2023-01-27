@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:gym_app/utils.dart';
+import 'package:sqflite/sqflite.dart';
 
 
 class ClientListPage extends StatefulWidget {
@@ -18,16 +20,7 @@ class _ClientListPageState extends State<ClientListPage> {
   _ClientListPageState({required this.userID});
 
   _getClients() async {
-    final conn = await MySqlConnection.connect(
-                  ConnectionSettings(
-                    host: '192.168.0.112',
-                    port: 3306,
-                    user: 'jucian',
-                    db: 'app_personal',
-                    password: 'Keua@54893',
-                    timeout: const Duration(seconds: 10)
-                  )
-                );
+    final conn = await MySqlConnection.connect(DataBase().settings);
     var result = await conn.query("SELECT client_user_id, name, photo_url, name_especialty, state FROM user JOIN client ON client.user_id = user.id JOIN client_has_personal ON client_User_id = client.user_id JOIN especialty ON especialty.id = client.especialty_id WHERE client_has_personal.personal_User_id = ${userID};");
     return result;
   }
@@ -122,16 +115,7 @@ class ClientCard extends StatelessWidget {
                             ClipOval(
                               child: InkWell(
                                 onTap: () async {
-                                  final conn = await MySqlConnection.connect(
-                                      ConnectionSettings(
-                                        host: '192.168.0.112',
-                                        port: 3306,
-                                        user: 'jucian',
-                                        db: 'app_personal',
-                                        password: 'Keua@54893',
-                                        timeout: const Duration(seconds: 10)
-                                      )
-                                    );
+                                  final conn = await MySqlConnection.connect(DataBase().settings);
                                   conn.query("UPDATE client_has_personal SET state = 'RECUSADA PELO PERSONAL' WHERE client_user_id = ${this.client.id}");
                                 },
                                 child: Container(
@@ -145,16 +129,7 @@ class ClientCard extends StatelessWidget {
                             ClipOval(
                               child: InkWell(
                                 onTap: () async {
-                                  final conn = await MySqlConnection.connect(
-                                      ConnectionSettings(
-                                        host: '192.168.0.112',
-                                        port: 3306,
-                                        user: 'jucian',
-                                        db: 'app_personal',
-                                        password: 'Keua@54893',
-                                        timeout: const Duration(seconds: 10)
-                                      )
-                                    );
+                                  final conn = await MySqlConnection.connect(DataBase().settings);
                                   conn.query("UPDATE client_has_personal SET state = 'PAGAMENTO PENDENTE' WHERE client_user_id = ${this.client.id}");
                                 },
                                 child: Container(
@@ -174,8 +149,8 @@ class ClientCard extends StatelessWidget {
                             child: Container(
                               width: 40,
                               height: 40,
-                              color: this.client.state == '' ? Colors.amberAccent : Colors.green,
-                              child: this.client.state == '' ? Icon(Icons.chat, size: 16,) : Icon(Icons.task_alt, size: 16,)
+                              color: Colors.amberAccent,
+                              child: const Icon(Icons.chat, size: 16,)
                             ) 
                           )             
                     ),

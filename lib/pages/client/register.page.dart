@@ -5,6 +5,7 @@ import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_app/mixins/validations_mixins.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:gym_app/utils.dart';
 
 
 class RegisterClientPage extends StatefulWidget {
@@ -197,16 +198,7 @@ class _RegisterClientPageState extends State<RegisterClientPage> with Validation
                           print(_descriptionController.text);
                           print(userId);
                           // Connect to the database
-                          final conn = await MySqlConnection.connect(
-                            ConnectionSettings(
-                              host: '192.168.0.112',
-                              port: 3306,
-                              user: 'jucian',
-                              db: 'app_personal',
-                              password: 'Keua@54893',
-                              timeout: const Duration(seconds: 10)
-                            )
-                          );
+                          final conn = await MySqlConnection.connect(DataBase().settings);
                           await conn.query(
                             'INSERT INTO app_personal.client (User_id, limitation, age, height, weight, description, especialty_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
                             [

@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 
+import 'package:gym_app/utils.dart';
 import 'package:gym_app/pages/personal/register.page.dart';
 import 'package:gym_app/pages/client/register.page.dart';
 
@@ -371,16 +372,7 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                               const SnackBar(content: Text('Processing Data'))
                             );
                             // Connect to the database
-                            final conn = await MySqlConnection.connect(
-                              ConnectionSettings(
-                                host: '192.168.0.112',
-                                port: 3306,
-                                user: 'jucian',
-                                db: 'app_personal',
-                                password: 'Keua@54893',
-                                timeout: const Duration(seconds: 10)
-                              )
-                            );
+                            final conn = await MySqlConnection.connect(DataBase().settings);
                             // Add addres to the dataase
                             var addreses_count = (await conn.query('SELECT MAX(id) FROM address;')).elementAt(0)[0];
                             if (addreses_count == null) {addreses_count = 0;} else {addreses_count = addreses_count+1;};
@@ -416,9 +408,9 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
                             
                             sleep(const Duration(milliseconds: 100));
                             if (_selections.indexOf(true) == 0) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterClientPage(user_Id)));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterClientPage(user_Id)));
                             } else if (_selections.indexOf(true) == 1) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(user_Id)));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterPersonalPage(user_Id)));
                             }
                           }
                         } catch (e) {

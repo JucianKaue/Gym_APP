@@ -130,16 +130,7 @@ class _RegisterPersonalPageState extends State<RegisterPersonalPage> {
                           print(_descriptionController.text);
                           print(userId);
                           // Connect to the database
-                          final conn = await MySqlConnection.connect(
-                            ConnectionSettings(
-                              host: '192.168.0.112',
-                              port: 3306,
-                              user: 'jucian',
-                              db: 'app_personal',
-                              password: 'Keua@54893',
-                              timeout: const Duration(seconds: 10)
-                            )
-                          );
+                          final conn = await MySqlConnection.connect(DataBase().settings);
                           await conn.query(
                             'INSERT INTO app_personal.personal (especialty_id, description, User_id) VALUES (?, ?, ?)',
                             [
@@ -149,7 +140,7 @@ class _RegisterPersonalPageState extends State<RegisterPersonalPage> {
                             ]
                           );
 
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
                         }
                       }, 
                     ),

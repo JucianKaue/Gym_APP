@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:gym_app/utils.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -16,16 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   _ProfilePageState(this.userID);
   
   Future _getuser() async {
-    final conn = await MySqlConnection.connect(
-                  ConnectionSettings(
-                    host: '192.168.0.112',
-                    port: 3306,
-                    user: 'jucian',
-                    db: 'app_personal',
-                    password: 'Keua@54893',
-                    timeout: const Duration(seconds: 10)
-                  )
-                );
+    final conn = await MySqlConnection.connect(DataBase().settings);
     var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id WHERE user.id = $userID;");
     return result.elementAt(0);
   }
