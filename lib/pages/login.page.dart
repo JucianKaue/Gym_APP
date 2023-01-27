@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'register.page.dart';
 import 'package:gym_app/mixins/validations_mixins.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 import 'package:gym_app/pages/personal/home.page.dart';
 import 'package:gym_app/pages/client/home.page.dart';
@@ -11,8 +13,32 @@ class LoginPage extends StatelessWidget with ValidationMixin {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // _checkLocalUser() async {
+  //   final db = await openDatabase(
+  //     join(await getDatabasesPath(), 'user.db'),
+  //     onCreate: (db, version) {
+  //       return db.execute('CREATE TABLE user(username VARCHAR(45), password VARCHAR(45));');
+  //     },
+  //   );
+
+  //   print(await db.query('user'));
+
+  //   return await db.query('user');
+  // }
+// _saveLocalUser(username, password) async {
+//     final db = await openDatabase(
+//       join(await getDatabasesPath(), 'user.db'),
+//       onCreate: (db, version) {
+//         return db.execute('CREATE TABLE user(username VARCHAR(45), password VARCHAR(45));');
+//       },
+//     );
+//     db.insert('user', {'username': username, 'password': password});
+//   }
+
+  
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(
@@ -98,6 +124,7 @@ class LoginPage extends StatelessWidget with ValidationMixin {
                             SnackBar(content: Text('Usuário ou senha incorreto!'))
                           );
                         } else {
+                          // _saveLocalUser(_usernameController.text, _passwordController.text);
                           if (user.elementAt(0)[1] == 0) {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ClientHomepage(userID: user.elementAt(0)[0])));
                           } else if (user.elementAt(0)[1] == 1) {

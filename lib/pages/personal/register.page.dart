@@ -149,7 +149,6 @@ class _RegisterPersonalPageState extends State<RegisterPersonalPage> {
                             ]
                           );
 
-                          
                           Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                         }
                       }, 

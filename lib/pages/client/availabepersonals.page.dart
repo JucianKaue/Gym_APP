@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -51,6 +50,7 @@ class StarClipper extends CustomClipper<Path> {
 class AvailablePersonals extends StatelessWidget {
   int userID;
   AvailablePersonals(this.userID);
+  
 
   Future _getpersonals() async {
     final conn = await MySqlConnection.connect(
@@ -63,7 +63,7 @@ class AvailablePersonals extends StatelessWidget {
                     timeout: const Duration(seconds: 10)
                   )
                 );
-    var result = await conn.query("SELECT user.name, user.photo_url, especialty.name_especialty, personal.score, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id;");
+    var result = await conn.query("SELECT user.id, user.name, user.photo_url, especialty.name_especialty, personal.score, personal.description FROM user JOIN PERSONAL ON personal.user_id = user.id JOIN especialty ON especialty.id = personal.especialty_id;");
     return result;
   }
 
@@ -186,6 +186,7 @@ class AvailablePersonals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
             appBar: AppBar(
               title: const Center(child: Text('Personais Disponíveis'))
@@ -205,61 +206,66 @@ class AvailablePersonals extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Card(
-                  margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                  margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                   child: Container(
-                    padding: EdgeInsets.all(10),
+                    height: 150,
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 220,
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    width: 1, 
-                                    color: Colors.black, 
-                                    style: BorderStyle.solid
+                            Column(children: [
+                              Container(
+                                width: 220,
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      width: 1, 
+                                      color: Colors.black, 
+                                      style: BorderStyle.solid
+                                    )
                                   )
-                                )
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children:  [
+                                    // Nome
+                                    Text('${snapshot.data.elementAt(index)["name"].split(" ")[0]}', style: const TextStyle(fontSize: 20)),
+                                    
+                                    // grade
+                                    _buildStarsScore(double.tryParse(snapshot.data.elementAt(index)["score"].toString())),
+                                    
+                                  ],
+                                ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children:  [
-                                  // Nome
-                                  Text('${snapshot.data.elementAt(index)["name"].split(" ")[0]}', style: const TextStyle(fontSize: 20)),
-                                  
-                                  // grade
-                                  _buildStarsScore(double.tryParse(snapshot.data.elementAt(index)["score"].toString())),
-                                  
-                                ],
+                              const SizedBox(height: 3,),
+                              // Especialidade
+                              Container(
+                                width: 210,
+                                child: Text('Área principal: ${snapshot.data.elementAt(index)["name_especialty"]}'),
                               ),
-                            ),
-                            // Especialidade
-                            Container(
-                              width: 210,
-                              child: Text('Especialista em: ${snapshot.data.elementAt(index)["name_especialty"]}'),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            // Breve Descrição
-                            Container(
-                              width: 210,
-                              child: Text('${snapshot.data.elementAt(index)["description"]}'),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
+                              
+                            ],),
+                            
                             // Botão de ação
                             Container(
                               width: 150,
                               child: ElevatedButton(
-                                onPressed: () {
-
-                                }, 
-                                child: Text('MAIS INFORMAÇÕES'),
+                                //photo_url, name, description, score, id
+                                onPressed: () => _personalPopUpView(context, {
+                                  'name': snapshot.data.elementAt(index)['name'],
+                                  'photo_url': snapshot.data.elementAt(index)['photo_url'],
+                                  'description': snapshot.data.elementAt(index)['description'],
+                                  'score': snapshot.data.elementAt(index)['score'],
+                                  'id': snapshot.data.elementAt(index)['id']
+                                }), 
+                                child: Center(
+                                  child: Column(
+                                    children: [Text('MAIS'), Text('INFORMAÇÕES')],
+                                  )
+                                )
                               ),
                             )
                           ],
@@ -273,17 +279,43 @@ class AvailablePersonals extends StatelessWidget {
                 onLongPress: () {
                   showDialog(
                     context: context, 
-                    builder: (context) => AlertDialog(
-                        title: Text('Hi men'),
-                        content: Text('UM TEXTO AVULSO AQUI CARA'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => print('Encaminhar pra perfil'), 
-                            child: const Text('Entrar em contato')
-                          )
-                        ],
-                      )
-                    ,
+                    builder: (context) => 
+                    AlertDialog(
+                      content: Container(
+                        width: 200,
+                        height: 200,
+                        color: Color.fromARGB(255, 250, 241, 157),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding( // Profile Picture of the personal
+                              padding: EdgeInsets.only(top: 5),
+                              child: Center( 
+                                child: ClipOval(
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Image.network(
+                                      snapshot.data.elementAt(index)['photo_url'],
+                                      width: 100,
+                                      height: 100,
+                                      errorBuilder: ((context, error, stackTrace) => Image.asset('assets/generic-person-icon.png', height: 100, width: 100,)),
+                                    )
+                                  )
+                                ),
+                              ),
+                            ),
+                            
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: Text('Nota: ${snapshot.data.elementAt(index)["score"]}'),
+                            )
+                            
+                          ]
+                          
+                        ),
+
+                      ),
+                    )
                   );
                 }
               );
@@ -297,5 +329,109 @@ class AvailablePersonals extends StatelessWidget {
   
     );
   }
+
+  _personalPopUpView (context, personal_info) {
+    // photo_url, name, description, score, id
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        content: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height*0.4,
+          color: Color.fromARGB(5, 189, 255, 7),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding( // Profile Picture and full name of the personal
+                padding: EdgeInsets.only(top: 5),
+                child: 
+                  Center( 
+                    child: Column(children: [
+                      ClipOval(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Image.network(
+                            personal_info['photo_url'],
+                            width: 100,
+                            height: 100,
+                            errorBuilder: ((context, error, stackTrace) => Image.asset('assets/generic-person-icon.png', height: 100, width: 100,)),
+                          )
+                        )
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        personal_info["name"], 
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20
+                        ),
+                      )
+                    ],)
+                  ),
+
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Column(
+                  children: [
+                    Text('Descrição: ${personal_info["description"]}'),
+                    SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+                    Text('Nota: ${personal_info["score"]}'),
+                ],)
+              )
+            ]
+          ),
+        ),
+          
+        actions: <Widget>[
+          TextButton(
+            child: Text("CONTRATAR"),
+            style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 7, 65, 255))),
+            onPressed: () async {
+              final conn = await MySqlConnection.connect(
+                  ConnectionSettings(
+                    host: '192.168.0.112',
+                    port: 3306,
+                    user: 'jucian',
+                    db: 'app_personal',
+                    password: 'Keua@54893',
+                    timeout: const Duration(seconds: 10)
+                  )
+              );
+              try {
+                conn.query('INSERT INTO client_has_personal VALUES (?, ?, ?)', [userID, personal_info['id'], 'CONFIRMAÇÃO DO PERSONAL PENDENTE']);
+              } catch (e) {
+                print(e);
+              }
+
+              Navigator.pop(context);
+              return showDialog(
+                context: context, 
+                builder: (context) {
+                  return 
+                  AlertDialog(
+                    content: Text('A solicitação foi enviada ao personal.\nFique atento, te avisaremos assim que ele responder'),
+                    
+                    actions:  [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }, 
+                        child: Center(child:Text('OK', style: TextStyle(fontWeight: FontWeight.bold),))
+                      ),
+                    ],
+                  );
+                }
+              );
+          
+              
+            
+            })
+        ],
+      )
+    );
+  }
 }
+
 
